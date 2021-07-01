@@ -7,7 +7,7 @@ const CONFIG = {
     btnIntro: 'hihi',
     title: 'Phải chăng em đã yêu ngay từ cái nhìn đầu tiên 😙',
     desc: 'Phải chăng em đã say ngay từ lúc thấy nụ cười ấy ',
-    btnYes: 'Yêu nhiều <33',
+    btnYes: 'Yêu nhiềuu <33',
     btnNo: 'Không yêu :3',
     messLink: 'https://www.facebook.com/Fapdeptrai
 }
