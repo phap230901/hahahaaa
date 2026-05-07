@@ -1,30 +1,86 @@
-# Tặng Crush
-## _Một điều nho nhỏ tỏ tình với crush_
+# Android Multi-Device Automation Desktop (WinForms, .NET 8)
 
-Liên lạc: 
-[![Facebook](https://i.imgur.com/GRqy96ts.jpg)](https://www.facebook.com/nam.nodemy)
-[![Tiktok](https://i.imgur.com/Nbfl1E7t.jpg)](https://www.tiktok.com/@manindev)
+Production-style starter architecture for a Windows desktop automation tool using ADB, SQLite, OpenCVSharp, and OCR.
 
-Mở file config.js sửa nội dung theo mẫu
+## Project Architecture
+
+- **UI Layer (`UI`)**
+  - WinForms MainForm, DataGridView device panel, tabbed operation modules.
+- **Application Layer (`Application`)**
+  - Device and automation orchestration (`DeviceManager`, `AutomationEngine`).
+- **Core Layer (`Core`)**
+  - Contracts (`Interfaces`) and pure models (`DeviceInfo`, workflow/ocr models).
+- **Infrastructure Layer (`Infrastructure`)**
+  - ADB command execution, SQLite persistence, OpenCV image matching, OCR service, logging.
+
+## Folder Structure
+
 ```
-const CONFIG = {
-    introTitle: 'Babe à!',
-    introDesc: `Trái đất vốn lạ thường
-    Mà sao em cứ đi nhầm đường
-    Lạc vào tim anh lẻ loi
-    Đằng sau chữ yêu đây là thương`,
-    btnIntro: 'hihi',
-    title: 'Phải chăng em đã yêu ngay từ cái nhìn đầu tiên 😙',
-    desc: 'Phải chăng em đã say ngay từ lúc thấy nụ cười ấy ',
-    btnYes: 'Vẫn cứ là thích anh <33',
-    btnNo: 'Không, Anh trai à :3',
-    question:'Trên thế giới hơn 7 tỉ người mà sao em lại yêu anh <3',
-    btnReply: 'Gửi cho anh <3',
-    reply: 'Yêu thì yêu mà không yêu thì yêu <33333333',
-    mess: 'Anh biết mà 🥰. Yêu em nhiều nhiều 😘😘',
-    messDesc: 'Tối nay 7h anh qua đón nhé công chúa.',
-    btnAccept: 'Okiiiii lun <3',
-    messLink: 'http://fb.com' //link mess của các bạn. VD: https://m.me/nam.nodemy
-}
+src/
+  Automation.Desktop/
+    Core/
+      Interfaces/
+      Models/
+    Application/
+      Managers/
+      Services/
+    Infrastructure/
+      Adb/
+      Database/
+      Imaging/
+      OCR/
+      Logging/
+    UI/
+      Forms/
+      Controls/
+    Program.cs
+    Automation.Desktop.csproj
 ```
 
+## Implemented Foundation
+
+1. **Device Manager**
+   - Async refresh of ADB devices
+   - In-memory cache + DB upsert
+   - UI event binding
+2. **ADB Wrapper**
+   - `tap`, `swipe`, `input text`, `screenshot capture`, `open app`, `clear app data`, `install apk`
+3. **Main UI**
+   - Tabs: Actions, Auto, Text Search, Restore & Reset, Random, Settings
+   - Action buttons added in Actions tab
+4. **Automation Engine**
+   - Step execution, retry logic, delay handling, logging hooks
+5. **Database**
+   - SQLite tables: `devices`, `logs`, `workflows`, `profiles`
+
+## NuGet Packages
+
+- `Microsoft.Extensions.DependencyInjection`
+- `Microsoft.Extensions.Logging`
+- `Microsoft.Extensions.Logging.Console`
+- `Microsoft.Data.Sqlite`
+- `OpenCvSharp4`
+- `OpenCvSharp4.runtime.win`
+- `Tesseract`
+
+## Build Instructions
+
+1. Install **.NET 8 SDK** on Windows.
+2. Ensure `adb` is in PATH.
+3. Restore/build:
+
+```bash
+cd src/Automation.Desktop
+dotnet restore
+dotnet build -c Release
+```
+
+4. Provide OCR tessdata files at runtime (`./tessdata`).
+
+## Next Production Steps
+
+- Add stronger command escaping strategy for ADB text input.
+- Add cancellation-aware background pipelines per device.
+- Persist full workflow definitions and runtime logs.
+- Add PaddleOCR adapter option under `IOcrService`.
+- Add per-device worker queue + max-concurrency control.
